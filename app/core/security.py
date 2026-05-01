@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 
 import jwt
@@ -31,7 +32,7 @@ def verify_google_id_token(token: str) -> dict:
     return idinfo
 
 
-def create_access_token(user_id: int) -> str:
+def create_access_token(user_id: uuid.UUID) -> str:
     """JWT 액세스 토큰을 생성합니다."""
     now = datetime.now(timezone.utc)
     payload = {
@@ -43,7 +44,7 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
 
-def create_refresh_token(user_id: int) -> str:
+def create_refresh_token(user_id: uuid.UUID) -> str:
     """JWT 리프레시 토큰을 생성합니다."""
     now = datetime.now(timezone.utc)
     payload = {
