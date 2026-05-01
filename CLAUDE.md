@@ -67,8 +67,7 @@ vivac-api/
 │   ├── main.py              # FastAPI 앱 인스턴스, lifespan
 │   ├── core/
 │   │   ├── config.py        # pydantic-settings 기반 환경 설정
-│   │   ├── database.py      # SQLAlchemy async 엔진, 세션, Base
-│   │   └── bastion.py       # SSH 터널 매니저 (dev 환경)
+│   │   └── database.py      # SQLAlchemy async 엔진, 세션, Base
 │   ├── models/              # SQLAlchemy ORM 모델
 │   ├── schemas/             # Pydantic 요청/응답 모델
 │   ├── crud/                # DB 쿼리 함수

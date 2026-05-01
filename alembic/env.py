@@ -66,13 +66,7 @@ async def run_async_migrations() -> None:
 
 
 def run_migrations_online() -> None:
-    from app.core.bastion import start_tunnel, stop_tunnel
-
-    start_tunnel()
-    try:
-        asyncio.run(run_async_migrations())
-    finally:
-        stop_tunnel()
+    asyncio.run(run_async_migrations())
 
 
 # ---------------------------------------------------------------------------
