@@ -1,0 +1,41 @@
+from typing import Literal
+
+from pydantic import computed_field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+    )
+
+    # -------------------------------------------------------------------------
+    # 애플리케이션
+    # -------------------------------------------------------------------------
+    ENVIRONMENT: Literal["local", "dev", "prod"] = "local"
+
+    # -------------------------------------------------------------------------
+    # 데이터베이스
+    # local: docker-compose / dev·prod: RDS 프라이빗 엔드포인트 (VPC 직접 접속)
+    # -------------------------------------------------------------------------
+    DB_HOST: str = "localhost"
+    DB_PORT: str = "5432"
+    DB_NAME: str
+    DB_USER: str
+    DB_PASSWORD: str
+
+    # -------------------------------------------------------------------------
+    # Computed fields
+    # -------------------------------------------------------------------------
+    @computed_field
+    @property
+    def database_url(self) -> str:
+        return (
+            f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}"
+            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        )
+
+
+settings = Settings()

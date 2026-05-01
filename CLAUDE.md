@@ -4,26 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-<!-- Fill in once project is bootstrapped -->
-
 ```bash
 # Install dependencies
-# TODO
+uv sync
 
-# Run development server
-# TODO
+# Install with dev dependencies
+uv sync --group dev
 
-# Build
-# TODO
-
-# Lint
-# TODO
+# Run development server (local)
+uv run uvicorn app.main:app --reload
 
 # Run all tests
-# TODO
+uv run pytest
 
 # Run a single test file
-# TODO
+uv run pytest tests/path/to/test_file.py
+
+# ---------------------------------------------------------------------------
+# Database (Alembic)
+# ---------------------------------------------------------------------------
+
+# Local DB 실행 (docker-compose)
+docker compose --env-file .env up -d db
+
+# 새 마이그레이션 파일 생성
+uv run alembic revision --autogenerate -m "describe your changes"
+
+# 마이그레이션 적용
+uv run alembic upgrade head
+
+# 마이그레이션 롤백 (1단계)
+uv run alembic downgrade -1
+
+# 현재 마이그레이션 상태 확인
+uv run alembic current
 ```
 
 ## Architecture
@@ -47,7 +61,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Structure
 
-<!-- Describe the top-level layout and any non-obvious conventions here -->
+```
+vivac-api/
+├── app/
+│   ├── main.py              # FastAPI 앱 인스턴스, lifespan
+│   ├── core/
+│   │   ├── config.py        # pydantic-settings 기반 환경 설정
+│   │   └── database.py      # SQLAlchemy async 엔진, 세션, Base
+│   ├── models/              # SQLAlchemy ORM 모델
+│   ├── schemas/             # Pydantic 요청/응답 모델
+│   ├── crud/                # DB 쿼리 함수
+│   └── routers/             # FastAPI 라우터
+├── alembic/                 # Alembic 마이그레이션
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions/
+├── alembic.ini
+├── docker-compose.yml       # Local PostgreSQL
+├── pyproject.toml           # uv 패키지 관리
+└── example.env              # 환경 변수 가이드 (실제 값 없음)
+```
 
 ## Key Conventions
 <!-- Document patterns that are not obvious from reading individual files — e.g., how requests flow through layers, naming rules, shared abstractions -->
