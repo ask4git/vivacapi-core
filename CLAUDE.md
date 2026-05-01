@@ -52,7 +52,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 프로젝트 개요는 @README.md를 참조하세요.
 <!-- 사용 가능한 npm 명령은 @package.json을 참조하세요. -->
 
-# 추가 지시사항
+## 추가 지시사항
 
 - API 설계/응답 규약: @.claude/rules/api-conventions.md
 - 코드 작성 스타일: @.claude/rules/code-style.md
