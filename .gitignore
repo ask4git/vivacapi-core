@@ -1,0 +1,80 @@
+# Environment
+.env
+.env.*
+!example.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+.uv/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+.pytype/
+.ruff_cache/
+
+# IDE
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Alembic (버전 파일은 커밋, 캐시는 제외)
+alembic/__pycache__/
+
+# Docker
+.docker/
+
+# Logs
+*.log
+logs/
+
+# SSH keys
+*.pem
+*.key
+*.ppk
+
+# Secrets / credentials
+*.p12
+*.pfx
+service-account*.json
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+.cache/

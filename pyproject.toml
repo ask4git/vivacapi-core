@@ -1,0 +1,24 @@
+[project]
+name = "vivac-api"
+version = "0.1.0"
+description = "VIVAC API - 캠퍼를 위한 장소 큐레이션 서비스"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "asyncpg>=0.30.0",
+    "pydantic-settings>=2.7.0",
+    "alembic>=1.14.0",
+    "sshtunnel>=0.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.27.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
