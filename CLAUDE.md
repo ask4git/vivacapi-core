@@ -1,4 +1,4 @@
-# CLAUDE.md
+# CLAUDE.md (수정중)
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -30,9 +30,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 <!-- Fill in once project structure is established -->
 
-- **Framework:** TBD
-- **Database / ORM:** TBD
-- **Auth:** TBD
+- **Framework:** FastAPI
+- **Database / ORM:** SQLAlchemy asyncio + PostgreSQL(asyncpg)
+- **Auth:** JWT Bearer + Google ID Token verify
+
+## 2) 기본 아키텍처 원칙
+- 패키지/의존성 관리는 `uv`를 사용한다.
+- 의존 방향:
+  - `routers`는 HTTP 입출력과 DI만 담당
+  - `crud`는 DB 접근/쿼리 담당
+  - `schemas`는 요청/응답 모델 정의
+  - `models`는 SQLAlchemy ORM 테이블 정의
+  - `core`는 설정/보안/DB 연결
+- 비즈니스 로직은 가능하면 `crud` 또는 명시적 서비스 계층으로 이동하고, 라우터는 얇게 유지한다.
+- 모든 DB 접근은 `AsyncSession`과 `await` 기반으로 작성한다.
 
 ## Project Structure
 
@@ -49,7 +60,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - *Example:* `fix/issue-connection-timeout`
   - *Example:* `refactor/clean-up-database-logic`
 
-프로젝트 개요는 @README.md를 참조하세요.
+프로젝트 개요는 @PRODUCT.md를 참조하세요.
 <!-- 사용 가능한 npm 명령은 @package.json을 참조하세요. -->
 
 ## 추가 지시사항
