@@ -1,7 +1,7 @@
 """add identity_verified_at and onboarding_survey_completed_at to users
 
 Revision ID: b33fd71c6fea
-Revises: 1d762a067d5e
+Revises: ffbca88f0936
 Create Date: 2026-05-02 12:37:57.224325
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = 'b33fd71c6fea'
-down_revision: Union[str, None] = '1d762a067d5e'
+down_revision: Union[str, None] = 'ffbca88f0936'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
