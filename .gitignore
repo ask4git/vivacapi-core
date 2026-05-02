@@ -78,3 +78,6 @@ service-account*.json
 *.bak
 *.orig
 .cache/
+
+
+CLAUDE.local.md
