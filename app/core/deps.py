@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt.exceptions import InvalidTokenError
@@ -30,7 +32,7 @@ async def get_current_user(
             detail="Invalid token type",
         )
 
-    user = await get_user_by_id(db, int(payload["sub"]))
+    user = await get_user_by_id(db, uuid.UUID(payload["sub"]))
 
     if user is None:
         raise HTTPException(

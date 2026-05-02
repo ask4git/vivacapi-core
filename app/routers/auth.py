@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,8 +67,8 @@ async def google_login(
 
     # 3) JWT 토큰 쌍 발급
     return TokenResponse(
-        access_token=create_access_token(user.id),
-        refresh_token=create_refresh_token(user.id),
+        access_token=create_access_token(user.uid),
+        refresh_token=create_refresh_token(user.uid),
     )
 
 
@@ -90,7 +92,7 @@ async def refresh(
             detail="Invalid token type",
         )
 
-    user = await get_user_by_id(db, int(payload["sub"]))
+    user = await get_user_by_id(db, uuid.UUID(payload["sub"]))
 
     if user is None:
         raise HTTPException(
@@ -105,8 +107,8 @@ async def refresh(
         )
 
     return TokenResponse(
-        access_token=create_access_token(user.id),
-        refresh_token=create_refresh_token(user.id),
+        access_token=create_access_token(user.uid),
+        refresh_token=create_refresh_token(user.uid),
     )
 
 

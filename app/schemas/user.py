@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, computed_field
@@ -6,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, computed_field
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    uid: uuid.UUID
     email: str
     name: str | None
     picture: str | None
