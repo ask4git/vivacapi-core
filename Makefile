@@ -1,4 +1,4 @@
-.PHONY: help run db-up db-down migrate migrate-down migrate-status migrate-new
+.PHONY: help run db-up db-down db-create-test migrate migrate-down migrate-status migrate-new test
 
 ENV ?= .env.local
 
@@ -22,6 +22,9 @@ db-up: ## Start local PostgreSQL (docker-compose)
 db-down: ## Stop local PostgreSQL
 	docker compose --env-file $(ENV) down
 
+db-create-test: ## Create vivac_test database in running container (run once for existing containers)
+	docker compose --env-file $(ENV) exec db createdb -U $$(grep '^DB_USER' $(ENV) | cut -d= -f2) vivac_test || true
+
 # ---------------------------------------------------------------------------
 # Migration (Alembic)
 # ---------------------------------------------------------------------------
@@ -37,3 +40,10 @@ migrate-status: ## Show current migration status (alembic current)
 
 migrate-new: ## Create a new migration (usage: make migrate-new m="describe changes")
 	uv run --env-file $(ENV) alembic revision --autogenerate -m "$(m)"
+
+# ---------------------------------------------------------------------------
+# Test
+# ---------------------------------------------------------------------------
+
+test: ## Run tests against vivac_test database
+	uv run --env-file .env.test pytest
