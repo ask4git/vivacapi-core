@@ -79,5 +79,5 @@ service-account*.json
 *.orig
 .cache/
 
-# Claude
+
 CLAUDE.local.md
