@@ -1,104 +1,69 @@
-# CLAUDE.md (수정중)
+# CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+  Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
-## Commands
+  **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-```bash
-# Install dependencies
-uv sync
+## 1. Think Before Coding
 
-# Install with dev dependencies
-uv sync --group dev
+  **Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-# Run development server (local)
-uv run uvicorn app.main:app --reload
+  Before implementing:
 
-# Run all tests
-uv run pytest
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+  
+## 2. Simplicity First
 
-# Run a single test file
-uv run pytest tests/path/to/test_file.py
+  **Minimum code that solves the problem. Nothing speculative.**
 
-# ---------------------------------------------------------------------------
-# Database (Alembic)
-# ---------------------------------------------------------------------------
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-# Local DB 실행 (docker-compose)
-docker compose --env-file .env up -d db
+  Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-# 새 마이그레이션 파일 생성
-uv run alembic revision --autogenerate -m "describe your changes"
+## 3. Surgical Changes
 
-# 마이그레이션 적용
-uv run alembic upgrade head
+  **Touch only what you must. Clean up only your own mess.**
 
-# 마이그레이션 롤백 (1단계)
-uv run alembic downgrade -1
+  When editing existing code:
 
-# 현재 마이그레이션 상태 확인
-uv run alembic current
-```
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
 
-## Architecture
+  When your changes create orphans:
 
-<!-- Fill in once project structure is established -->
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
 
-- **Framework:** FastAPI
-- **Database / ORM:** SQLAlchemy asyncio + PostgreSQL(asyncpg)
-- **Auth:** JWT Bearer + Google ID Token verify
+  The test: Every changed line should trace directly to the user's request.
 
-## 2) 기본 아키텍처 원칙
-- 패키지/의존성 관리는 `uv`를 사용한다.
-- 의존 방향:
-  - `routers`는 HTTP 입출력과 DI만 담당
-  - `crud`는 DB 접근/쿼리 담당
-  - `schemas`는 요청/응답 모델 정의
-  - `models`는 SQLAlchemy ORM 테이블 정의
-  - `core`는 설정/보안/DB 연결
-- 비즈니스 로직은 가능하면 `crud` 또는 명시적 서비스 계층으로 이동하고, 라우터는 얇게 유지한다.
-- 모든 DB 접근은 `AsyncSession`과 `await` 기반으로 작성한다.
+## 4. Goal-Driven Execution
 
-## Project Structure
+  **Define success criteria. Loop until verified.**
 
-```
-vivac-api/
-├── app/
-│   ├── main.py              # FastAPI 앱 인스턴스, lifespan
-│   ├── core/
-│   │   ├── config.py        # pydantic-settings 기반 환경 설정
-│   │   └── database.py      # SQLAlchemy async 엔진, 세션, Base
-│   ├── models/              # SQLAlchemy ORM 모델
-│   ├── schemas/             # Pydantic 요청/응답 모델
-│   ├── crud/                # DB 쿼리 함수
-│   └── routers/             # FastAPI 라우터
-├── alembic/                 # Alembic 마이그레이션
-│   ├── env.py
-│   ├── script.py.mako
-│   └── versions/
-├── alembic.ini
-├── docker-compose.yml       # Local PostgreSQL
-├── pyproject.toml           # uv 패키지 관리
-└── example.env              # 환경 변수 가이드 (실제 값 없음)
-```
+  Transform tasks into verifiable goals:
 
-## Key Conventions
-<!-- Document patterns that are not obvious from reading individual files — e.g., how requests flow through layers, naming rules, shared abstractions -->
-### 📝 Git Workflow & Branching Strategy
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
 
-- **Restricted Direct Push:** Direct pushes to the `main` branch are strictly prohibited. All changes must be submitted via Pull Request.
+  For multi-step tasks, state a brief plan:
 
-- **Branch Naming Convention:** Use the `type/description` pattern for all new branches.
-  - *Example:* `feature/user-authentication`
-  - *Example:* `fix/issue-connection-timeout`
-  - *Example:* `refactor/clean-up-database-logic`
+  1. [Step] → verify: [check]
+  2. [Step] → verify: [check]
+  3. [Step] → verify: [check]
 
-프로젝트 개요는 @PRODUCT.md를 참조하세요.
-<!-- 사용 가능한 npm 명령은 @package.json을 참조하세요. -->
+  Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-## 추가 지시사항
+  ---
 
-- API 설계/응답 규약: @.claude/rules/api-conventions.md
-- 코드 작성 스타일: @.claude/rules/code-style.md
-- 보안/인증 규약: @.claude/rules/security.md
-- 테스트 전략/작성 규칙: @.claude/rules/testing.md
+  **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and
+  clarifying questions come before implementation rather than after mistakes.
